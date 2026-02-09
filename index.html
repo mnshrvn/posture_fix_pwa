@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff3c50">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Posture Fix">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Posture Correction Workout</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161618;
+    --surface-2: #1e1e22;
+    --accent: #ff3c50;
+    --accent-glow: rgba(255, 60, 80, 0.15);
+    --text: #e8e8ec;
+    --text-dim: #8a8a96;
+    --border: #2a2a30;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --amber: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  /* Install banner */
+  .install-banner {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--accent);
+    padding: 16px 20px;
+    z-index: 1000;
+    animation: slideUp 0.4s ease;
+  }
+
+  .install-banner.show { display: flex; align-items: center; gap: 12px; }
+
+  .install-banner p {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .install-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .install-dismiss {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    padding: 70px 24px 50px;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,60,80,0.08) 0%, transparent 70%);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,60,80,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent-glow);
+    border: 1px solid rgba(255,60,80,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    letter-spacing: 3px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    font-weight: 300;
+    max-width: 420px;
+    margin: 14px auto 0;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat { text-align: center; }
+
+  .hero-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--accent);
+  }
+
+  .hero-stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* Nav tabs */
+  .nav-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    flex: 1;
+    min-width: 0;
+    padding: 14px 8px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-tab:hover, .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Container */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 16px 100px;
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 40px 0 16px;
+    scroll-margin-top: 60px;
+  }
+
+  .section-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .section-icon.warmup { background: rgba(245,158,11,0.15); }
+  .section-icon.strength { background: rgba(255,60,80,0.15); }
+  .section-icon.stretch { background: rgba(34,197,94,0.15); }
+  .section-icon.daily { background: rgba(59,130,246,0.15); }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  /* Exercise cards */
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+
+  .exercise-card:active {
+    border-color: rgba(255,60,80,0.3);
+  }
+
+  .card-top {
+    padding: 18px;
+    cursor: pointer;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
+
+  .card-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 32px;
+  }
+
+  .card-name {
+    font-size: 17px;
+    font-weight: 700;
+    flex: 1;
+  }
+
+  .card-chevron {
+    color: var(--text-dim);
+    transition: transform 0.3s;
+    font-size: 18px;
+  }
+
+  .exercise-card.open .card-chevron {
+    transform: rotate(180deg);
+  }
+
+  .card-sets {
+    display: inline-block;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 8px 0 0 44px;
+  }
+
+  .card-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+
+  .exercise-card.open .card-detail {
+    max-height: 400px;
+  }
+
+  .card-detail-inner {
+    padding: 0 18px 6px 18px;
+  }
+
+  .card-cue {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 300;
+    line-height: 1.55;
+    margin-left: 44px;
+  }
+
+  .card-muscles {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 10px 0 0 44px;
+  }
+
+  .muscle-tag {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Completion checkbox */
+  .card-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 4px 44px;
+  }
+
+  .card-check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface-2);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .card-check input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .card-check input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .card-check label {
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+  }
+
+  /* Video button */
+  .video-bar {
+    border-top: 1px solid var(--border);
+  }
+
+  .video-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .video-link:active {
+    background: rgba(255,60,80,0.08);
+    color: var(--accent);
+  }
+
+  .video-link svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  /* Warmup grid */
+  .warmup-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  @media (min-width: 500px) {
+    .warmup-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .warmup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .warmup-top {
+    padding: 16px 16px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .warmup-name { font-weight: 700; font-size: 14px; }
+
+  .warmup-reps {
+    font-size: 12px;
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  .warmup-video {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    border-top: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .warmup-video:active {
+    background: rgba(245,158,11,0.08);
+    color: var(--amber);
+  }
+
+  .warmup-video svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Stretch cards */
+  .stretch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .stretch-top {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .stretch-left { flex: 1; min-width: 0; }
+  .stretch-name { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+
+  .stretch-why {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 300;
+  }
+
+  .stretch-dur {
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .stretch-video {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    border-top: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .stretch-video:active {
+    background: rgba(34,197,94,0.06);
+    color: var(--green);
+  }
+
+  .stretch-video svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* Daily tip */
+  .daily-card {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .daily-card p {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .daily-card strong { color: var(--text); font-weight: 600; }
+
+  .daily-highlight {
+    display: inline-block;
+    background: rgba(59,130,246,0.12);
+    color: var(--blue);
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* Progress bar */
+  .progress-section {
+    margin-top: 36px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-align: center;
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-bg {
+    height: 8px;
+    background: var(--surface-2);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #ff6b7a);
+    border-radius: 100px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .progress-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .progress-note {
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .progress-note p {
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  .progress-note span {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Reset button */
+  .reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<!-- Install Banner -->
+<div class="install-banner" id="installBanner">
+  <p>📲 Install this app for quick access</p>
+  <button class="install-btn" id="installBtn">Install</button>
+  <button class="install-dismiss" id="dismissBtn">✕</button>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">Gym Program</div>
+  <h1>POSTURE <span>CORRECTION</span></h1>
+  <p class="hero-sub">Strengthen weak muscles, stretch tight ones, fix your slouch and forward head.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">3–4×</div>
+      <div class="hero-stat-label">Per Week</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">~45</div>
+      <div class="hero-stat-label">Minutes</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">11</div>
+      <div class="hero-stat-label">Exercises</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">3–4</div>
+      <div class="hero-stat-label">Weeks to Results</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Nav -->
+<nav class="nav-tabs">
+  <a class="nav-tab" href="#warmup">🔥 Warm-Up</a>
+  <a class="nav-tab" href="#strength">💪 Strength</a>
+  <a class="nav-tab" href="#stretch">🧘 Stretch</a>
+  <a class="nav-tab" href="#daily">📅 Daily</a>
+</nav>
+
+<div class="container">
+
+  <!-- WARM-UP -->
+  <div class="section-header" id="warmup">
+    <div class="section-icon warmup">🔥</div>
+    <div class="section-title">WARM-UP — 5 MINUTES</div>
+  </div>
+
+  <div class="warmup-grid">
+    <div class="warmup-card">
+      <div class="warmup-top">
+        <span class="warmup-name">Cat-Cow Stretches</span>
+        <span class="warmup-reps">× 10</span>
+      </div>
+      <a class="warmup-video" href="https://www.youtube.com/results?search_query=cat+cow+stretch+exercise+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch Tutorial
+      </a>
+    </div>
+    <div class="warmup-card">
+      <div class="warmup-top">
+        <span class="warmup-name">Wall Angels</span>
+        <span class="warmup-reps">× 10 slow</span>
+      </div>
+      <a class="warmup-video" href="https://www.youtube.com/results?search_query=wall+angels+exercise+tutorial+posture" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch Tutorial
+      </a>
+    </div>
+    <div class="warmup-card">
+      <div class="warmup-top">
+        <span class="warmup-name">Band Pull-Aparts</span>
+        <span class="warmup-reps">× 15</span>
+      </div>
+      <a class="warmup-video" href="https://www.youtube.com/results?search_query=band+pull+aparts+exercise+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch Tutorial
+      </a>
+    </div>
+  </div>
+
+  <!-- STRENGTH -->
+  <div class="section-header" id="strength">
+    <div class="section-icon strength">💪</div>
+    <div class="section-title">STRENGTH WORK</div>
+  </div>
+
+  <div class="exercise-card" data-ex="1">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">01</div>
+        <div class="card-name">Chin Tucks</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 15 reps — hold 3s each</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Stand against a wall. Press the back of your head into the wall while tucking your chin down. Make a "double chin." Directly reverses forward head posture by strengthening deep neck flexors.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Deep Neck Flexors</span>
+          <span class="muscle-tag">Suboccipitals</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check1" onchange="updateProgress()">
+          <label for="check1">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=chin+tuck+exercise+forward+head+posture+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="2">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">02</div>
+        <div class="card-name">Face Pulls</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 15 reps</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Pull cable/band to forehead height with external rotation at the end. Keep elbows high. Targets rear delts, mid/lower traps, and rotator cuff.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Rear Delts</span>
+          <span class="muscle-tag">Mid/Lower Traps</span>
+          <span class="muscle-tag">Rotator Cuff</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check2" onchange="updateProgress()">
+          <label for="check2">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=cable+face+pulls+proper+form+posture" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="3">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">03</div>
+        <div class="card-name">Prone Y-T-W Raises</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 8 each position</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Lie face down on an incline bench, arms hanging. Raise into Y, T, and W shapes with thumbs up. Light dumbbells or bodyweight. Builds scapular retractors and lower traps.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Lower Traps</span>
+          <span class="muscle-tag">Rhomboids</span>
+          <span class="muscle-tag">Scapular Stabilizers</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check3" onchange="updateProgress()">
+          <label for="check3">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=prone+Y+T+W+raises+exercise+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="4">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">04</div>
+        <div class="card-name">Seated Cable Row</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 12 reps — wide grip</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Squeeze shoulder blades together hard at the end. Focus on contraction, not weight. Strengthens rhomboids and mid-traps.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Rhomboids</span>
+          <span class="muscle-tag">Mid Traps</span>
+          <span class="muscle-tag">Lats</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check4" onchange="updateProgress()">
+          <label for="check4">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=seated+cable+row+wide+grip+form+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="5">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">05</div>
+        <div class="card-name">Single-Arm DB Row</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 10 each side</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Row to your hip, not your shoulder. Builds unilateral back strength and teaches scapular control.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Lats</span>
+          <span class="muscle-tag">Rhomboids</span>
+          <span class="muscle-tag">Rear Delts</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check5" onchange="updateProgress()">
+          <label for="check5">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=single+arm+dumbbell+row+proper+form" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="6">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">06</div>
+        <div class="card-name">Romanian Deadlift</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 8 reps</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Strengthens entire posterior chain — erectors, glutes, hamstrings. Hinge at the hips, keep the bar close. Essential for holding upright posture all day.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Erectors</span>
+          <span class="muscle-tag">Glutes</span>
+          <span class="muscle-tag">Hamstrings</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check6" onchange="updateProgress()">
+          <label for="check6">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=romanian+deadlift+proper+form+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-ex="7">
+    <div class="card-top" onclick="toggleCard(this)">
+      <div class="card-header">
+        <div class="card-number">07</div>
+        <div class="card-name">Farmer's Carries</div>
+        <div class="card-chevron">▾</div>
+      </div>
+      <div class="card-sets">3 × 40m</div>
+    </div>
+    <div class="card-detail">
+      <div class="card-detail-inner">
+        <div class="card-cue">Hold heavy dumbbells, stand tall, pack shoulders down and back. Trains postural endurance under load.</div>
+        <div class="card-muscles">
+          <span class="muscle-tag">Traps</span>
+          <span class="muscle-tag">Core</span>
+          <span class="muscle-tag">Grip</span>
+          <span class="muscle-tag">Full Body</span>
+        </div>
+        <div class="card-check">
+          <input type="checkbox" id="check7" onchange="updateProgress()">
+          <label for="check7">Done</label>
+        </div>
+      </div>
+    </div>
+    <div class="video-bar">
+      <a class="video-link" href="https://www.youtube.com/results?search_query=farmer+carry+exercise+form+tutorial" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        Watch on YouTube
+      </a>
+    </div>
+  </div>
+
+  <!-- STRETCHING -->
+  <div class="section-header" id="stretch">
+    <div class="section-icon stretch">🧘</div>
+    <div class="section-title">STRETCHING &amp; MOBILITY</div>
+  </div>
+
+  <div class="stretch-card">
+    <div class="stretch-top">
+      <div class="stretch-left">
+        <div class="stretch-name">Doorway Chest Stretch</div>
+        <div class="stretch-why">Opens tight pecs pulling shoulders forward</div>
+      </div>
+      <span class="stretch-dur">30s / side</span>
+    </div>
+    <a class="stretch-video" href="https://www.youtube.com/results?search_query=doorway+chest+stretch+pec+stretch+tutorial" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      Watch Tutorial
+    </a>
+  </div>
+
+  <div class="stretch-card">
+    <div class="stretch-top">
+      <div class="stretch-left">
+        <div class="stretch-name">Hip Flexor Stretch</div>
+        <div class="stretch-why">Tight hip flexors tilt pelvis &amp; cause slouch</div>
+      </div>
+      <span class="stretch-dur">30s / side</span>
+    </div>
+    <a class="stretch-video" href="https://www.youtube.com/results?search_query=half+kneeling+hip+flexor+stretch+tutorial" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      Watch Tutorial
+    </a>
+  </div>
+
+  <div class="stretch-card">
+    <div class="stretch-top">
+      <div class="stretch-left">
+        <div class="stretch-name">Upper Trap Stretch</div>
+        <div class="stretch-why">Releases neck &amp; shoulder tension</div>
+      </div>
+      <span class="stretch-dur">30s / side</span>
+    </div>
+    <a class="stretch-video" href="https://www.youtube.com/results?search_query=upper+trap+stretch+neck+stretch+tutorial" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      Watch Tutorial
+    </a>
+  </div>
+
+  <div class="stretch-card">
+    <div class="stretch-top">
+      <div class="stretch-left">
+        <div class="stretch-name">Thoracic Extension (Foam Roller)</div>
+        <div class="stretch-why">Restores mid-back extension, reverses rounding</div>
+      </div>
+      <span class="stretch-dur">10 reps</span>
+    </div>
+    <a class="stretch-video" href="https://www.youtube.com/results?search_query=thoracic+extension+foam+roller+exercise+tutorial" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      Watch Tutorial
+    </a>
+  </div>
+
+  <!-- DAILY -->
+  <div class="section-header" id="daily">
+    <div class="section-icon daily">📅</div>
+    <div class="section-title">DAILY HABIT — NON-GYM</div>
+  </div>
+
+  <div class="daily-card">
+    <p>
+      Do <span class="daily-highlight">10 chin tucks</span> and <span class="daily-highlight">10 wall angels</span> every morning and every 1–2 hours at your desk.
+      <br><br>
+      Posture is a <strong>habit</strong>, not just a strength issue — this daily work matters as much as the gym.
+    </p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-label">Today's Progress</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">0 / 7 exercises</div>
+    <button class="reset-btn" onclick="resetProgress()">Reset Workout</button>
+  </div>
+
+  <div class="progress-note">
+    <p>Stay consistent — results in <span>3–4 weeks</span>.</p>
+  </div>
+
+</div>
+
+<script>
+  // Toggle exercise cards
+  function toggleCard(el) {
+    const card = el.closest('.exercise-card');
+    card.classList.toggle('open');
+  }
+
+  // Progress tracking
+  const TOTAL = 7;
+
+  function updateProgress() {
+    let done = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      if (document.getElementById('check' + i).checked) done++;
+    }
+    const pct = Math.round((done / TOTAL) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = done + ' / ' + TOTAL + ' exercises';
+
+    // Save state
+    const state = {};
+    for (let i = 1; i <= TOTAL; i++) {
+      state['check' + i] = document.getElementById('check' + i).checked;
+    }
+    try { localStorage.setItem('posture-progress', JSON.stringify(state)); } catch(e) {}
+  }
+
+  function resetProgress() {
+    for (let i = 1; i <= TOTAL; i++) {
+      document.getElementById('check' + i).checked = false;
+    }
+    updateProgress();
+  }
+
+  // Restore state
+  function restoreProgress() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('posture-progress'));
+      if (saved) {
+        for (let i = 1; i <= TOTAL; i++) {
+          if (saved['check' + i]) document.getElementById('check' + i).checked = true;
+        }
+      }
+    } catch(e) {}
+    updateProgress();
+  }
+
+  // Sticky nav active state
+  const sections = ['warmup', 'strength', 'stretch', 'daily'];
+  const tabs = document.querySelectorAll('.nav-tab');
+
+  function updateActiveTab() {
+    let current = '';
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 100) current = id;
+    }
+    tabs.forEach(tab => {
+      tab.classList.toggle('active', tab.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveTab, { passive: true });
+
+  // PWA Install
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installBanner').classList.add('show');
+  });
+
+  document.getElementById('installBtn').addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('installBanner').classList.remove('show');
+    }
+  });
+
+  document.getElementById('dismissBtn').addEventListener('click', () => {
+    document.getElementById('installBanner').classList.remove('show');
+  });
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.log('SW error:', err));
+  }
+
+  // Init
+  restoreProgress();
+</script>
+
+</body>
+</html>
